@@ -11,7 +11,7 @@
 	var markers = []
 	
 	var getBoards = (swLat, swLng, neLat, neLng)=>{
-		$.get(`/api/board/list`, { swLat: swLat, swLng: swLng, neLat: neLat, neLng: neLng })
+		$.get(`/api/board`, { swLat: swLat, swLng: swLng, neLat: neLat, neLng: neLng })
 		.done((data) => {
 			console.log(data)		
 			setMarkers(data)
