@@ -32,7 +32,17 @@ public class BoardController extends BaseController {
 	@Autowired
 	private ImageService imageService;
 	
-	@GetMapping(value = "/list")
+	/**
+	 * 게시글 리스트 조회
+	 * 
+	 * @param swLat 남서경도
+	 * @param swLng 남서위도
+	 * @param neLat 북동경도
+	 * @param neLng 북동위도
+	 * @return {@link List} 게시글 리스트
+	 * @throws Exception
+	 */
+	@GetMapping
 	public ResponseEntity<List<BoardVO>> getBoards(
 			@RequestParam(name = "swLat", defaultValue = "-90.0") double swLat
 			, @RequestParam(name = "swLng", defaultValue = "-180.0") double swLng
@@ -43,6 +53,13 @@ public class BoardController extends BaseController {
 		return ResponseEntity.ok(boards);
 	}
 	
+	/**
+	 * 게시글 조회
+	 * 
+	 * @param boardId 게시글번호
+	 * @return {@link BoardVO} 게시글
+	 * @throws Exception
+	 */
 	@GetMapping(value = "/{boardId}")
 	public ResponseEntity<BoardVO> getBoard(
 			@PathVariable(name = "boardId", required = true) int boardId) throws Exception {
@@ -56,6 +73,15 @@ public class BoardController extends BaseController {
 		return ResponseEntity.ok(board);
 	}
 	
+	/**
+	 * 게시글 생성
+	 * 
+	 * @param board 게시글
+	 * @param files 첨부파일들(이미지)
+	 * @param session 세션
+	 * @return
+	 * @throws Exception
+	 */
 	@PostMapping
 	public ResponseEntity<Void> insertBoard(
 			BoardVO board
@@ -75,6 +101,13 @@ public class BoardController extends BaseController {
 		return ResponseEntity.created(null).build();
 	}
 	
+	/**
+	 * 게시글 수정
+	 * 
+	 * @param board 게시글
+	 * @return
+	 * @throws Exception
+	 */
 	@PutMapping
 	public ResponseEntity<Void> updateBoard(@RequestBody BoardVO board) throws Exception {
 		if(!this.boardService.updateBoard(board)) {
@@ -84,8 +117,16 @@ public class BoardController extends BaseController {
 		return ResponseEntity.ok(null);
 	}
 	
-	@DeleteMapping
-	public ResponseEntity<Void> deleteBoard(int boardId) throws Exception {
+	/**
+	 * 게시글 삭제
+	 * 
+	 * @param boardId 게시글번호
+	 * @return
+	 * @throws Exception
+	 */
+	@DeleteMapping(value = "/{boardId}")
+	public ResponseEntity<Void> deleteBoard(
+			@PathVariable(name = "boardId", required = true) int boardId) throws Exception {
 		if(!this.boardService.deleteBoard(boardId)) {
 			return ResponseEntity.badRequest().build();
 		}

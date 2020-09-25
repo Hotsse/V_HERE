@@ -3,6 +3,7 @@
 
 <mapper namespace="image">
 	
+	<!-- 이미지번호 리스트 조회 -->
 	<select id="getImageIds" parameterType="map" resultType="Integer">
 		SELECT img_id
 		FROM image
@@ -11,6 +12,7 @@
 		ORDER BY img_id ASC
 	</select>
 	
+	<!-- 이미지 리스트 조회 -->
 	<select id="getImages" parameterType="map" resultType="ImageVO">
 		SELECT img_id as imgId
 			, board_id as boardId
@@ -23,6 +25,7 @@
 		ORDER BY img_id ASC
 	</select>
 	
+	<!-- 이미지 조회 -->
 	<select id="getImage" parameterType="map" resultType="ImageVO">
 		SELECT img_id as imgId
 			, board_id as boardId
@@ -34,6 +37,7 @@
 			AND img_id = #{imgId}
 	</select>
 	
+	<!-- 이미지 생성 -->
 	<insert id="insertImage" parameterType="ImageVO" useGeneratedKeys="true" keyProperty="imgId">
 		INSERT INTO image (
 			board_id
@@ -51,6 +55,7 @@
 		)
 	</insert>
 	
+	<!-- 이미지 삭제 -->
 	<update id="deleteImage" parameterType="map">
 		UPDATE image
 		SET use_yn = 'N'

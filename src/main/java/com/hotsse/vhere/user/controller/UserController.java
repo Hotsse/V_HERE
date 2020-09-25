@@ -24,6 +24,15 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
+	/**
+	 * 로그인
+	 * 
+	 * @param id 아이디
+	 * @param pw 패스워드
+	 * @param session 세션
+	 * @return {@link UserVO} 회원정보
+	 * @throws Exception
+	 */
 	@PostMapping("/login")
 	public ResponseEntity<UserVO> login(
 			@RequestParam(name = "id", required = true) String id
@@ -43,6 +52,13 @@ public class UserController {
 		return ResponseEntity.ok(user);
 	}
 	
+	/**
+	 * 로그아웃
+	 * 
+	 * @param session 세션
+	 * @return
+	 * @throws Exception
+	 */
 	@GetMapping("/logout")
 	public ResponseEntity<Void> logout(HttpSession session) throws Exception {
 		
@@ -50,35 +66,70 @@ public class UserController {
 		return ResponseEntity.ok(null);
 	}
 	
+	/**
+	 * 회원가입
+	 * 
+	 * @param user 회원정보
+	 * @return
+	 * @throws Exception
+	 */
 	@PostMapping
-	public boolean insertUser(@RequestBody UserVO user) throws Exception {
-		return this.userService.insertUser(user);
+	public ResponseEntity<Void> insertUser(@RequestBody UserVO user) throws Exception {
+		
+		if(!this.userService.insertUser(user)) {
+			return ResponseEntity.badRequest().build();
+		}
+		
+		return ResponseEntity.ok()
+				.build();
 	}
 	
+	/**
+	 * 회원탈퇴
+	 * 
+	 * @param session 세션
+	 * @return
+	 * @throws Exception
+	 */
 	@DeleteMapping
-	public boolean deleteUser(HttpSession session) throws Exception {
+	public ResponseEntity<Void> deleteUser(HttpSession session) throws Exception {
 		
 		String id = (String)session.getAttribute("id");
 		
-		if(id == null) {
-			return false;
+		if(id == null || !this.userService.deleteUser(id)) {
+			return ResponseEntity.badRequest().build();
 		}
 		
-		return this.userService.deleteUser(id);
+		session.invalidate();
+		
+		return ResponseEntity.ok()
+				.build();
 	}
 	
+	/**
+	 * 패스워드 변경
+	 * 
+	 * @param user 회원정보
+	 * @param session 세션
+	 * @return
+	 * @throws Exception
+	 */
 	@PutMapping(value = "/password")
-	public boolean updatePassword(
+	public ResponseEntity<Void> updatePassword(
 			@RequestBody UserVO user
 			, HttpSession session) throws Exception {
 		
 		String id = (String)session.getAttribute("id");
 		
 		if(id == null) {
-			return false;
+			return ResponseEntity.badRequest().build();
 		}
 		
-		user.setId(id);		
-		return this.userService.updatePassword(user);
+		user.setId(id);
+		if(!this.userService.updatePassword(user)) {
+			return ResponseEntity.badRequest().build();
+		}
+		return ResponseEntity.ok()
+				.build();
 	}
 }

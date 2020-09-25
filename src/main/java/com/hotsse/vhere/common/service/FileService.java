@@ -24,6 +24,13 @@ public class FileService extends BaseService {
 	@Value("${file.path}")
 	private String storagePath;
 	
+	/**
+	 * 파일 업로드
+	 * 
+	 * @param file 파일
+	 * @return 파일경로
+	 * @throws Exception
+	 */
 	public String uploadFile(MultipartFile file) throws Exception {
 		
 		// 파일 경로 생성
@@ -54,6 +61,13 @@ public class FileService extends BaseService {
 		return filePath;		
 	}
 	
+	/**
+	 * 이미지 뷰 다운로드
+	 * 
+	 * @param img 이미지 정보
+	 * @param res Response 객체
+	 * @throws Exception
+	 */
 	public void downloadImg(ImageVO img, HttpServletResponse res) throws Exception {
 		
 		if(img != null) {

@@ -17,6 +17,13 @@ public class ImageController {
 	@Autowired
 	private ImageService imageService;
 
+	/**
+	 * 이미지 보기
+	 * 
+	 * @param imgId 이미지번호
+	 * @param res Response 객체
+	 * @throws Exception
+	 */
 	@GetMapping(value = "/{imgId}")
 	public void downloadImage(
 			@PathVariable(name = "imgId", required = true) int imgId

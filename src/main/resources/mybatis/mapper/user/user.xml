@@ -3,6 +3,7 @@
 
 <mapper namespace="user">
 
+	<!-- 회원 정보 조회 -->
 	<select id="getUser" parameterType="map" resultType="UserVO">
 		SELECT id
 			, name
@@ -12,6 +13,7 @@
 			AND pw = #{pw}
 	</select>
 
+	<!-- 회원가입 -->
 	<insert id="insertUser" parameterType="UserVO">
 		INSERT INTO user (
 			id
@@ -27,12 +29,14 @@
 		)
 	</insert>
 	
+	<!-- 패스워드 변경 -->
 	<update id="updatePassword" parameterType="UserVO">
 		UPDATE user
 		SET pw = #{pw}
 		WHERE id = #{id}
 	</update>
 	
+	<!-- 회원탈퇴 -->
 	<update id="deleteUser" parameterType="map">
 		UPDATE user
 		SET use_yn = 'N'

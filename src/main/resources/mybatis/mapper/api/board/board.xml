@@ -3,6 +3,7 @@
 
 <mapper namespace="board">
 	
+	<!-- 게시글 리스트 조회 -->
 	<select id="getBoards" resultType="BoardVO">
 		SELECT board_id as boardId
 			, title as title
@@ -24,6 +25,7 @@
 		ORDER BY board_id DESC
 	</select>
 	
+	<!-- 게시글 조회 -->
 	<select id="getBoard" parameterType="map" resultType="BoardVO">
 		SELECT board_id as boardId
 			, title as title
@@ -43,6 +45,7 @@
 		WHERE board_id = #{boardId}
 	</select>
 	
+	<!-- 게시글 생성 -->
 	<insert id="insertBoard" parameterType="BoardVO" useGeneratedKeys="true" keyProperty="boardId">
 		INSERT INTO board (
 			title
@@ -66,6 +69,7 @@
 		)
 	</insert>
 	
+	<!-- 게시글 수정 -->
 	<update id="updateBoard" parameterType="BoardVO">
 		UPDATE board
 		SET title = #{title}
@@ -75,6 +79,7 @@
 		WHERE board_id = #{boardId}
 	</update>
 	
+	<!-- 게시글 삭제 -->
 	<update id="deleteBoard" parameterType="map">
 		UPDATE board
 		SET use_yn = 'N'
