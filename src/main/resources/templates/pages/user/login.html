@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorator="layouts/default">
+
+<div layout:fragment="content">
+
+	<script type="text/javascript">
+	var submitLogin = ()=>{
+		id = $('#inputId').val()
+		pw = $('#inputPw').val()
+		
+		if(id == '' || pw == '') {
+			alert('올바른 계정을 입력해 주세요 :(')
+			return;
+		}
+		
+		$.post(`/user/login`, {
+			id: id
+			, pw: pw
+		})
+		.done((data)=>{
+			window.location.href='/'
+		})
+		.fail((e)=>{
+			console.log(e)
+		})
+	}
+	</script>
+	
+	<div class="jumbotron text-center">
+		<h1>V - HERE</h1>
+		<p>당신은 따라만 하세요!</p> 
+	</div>
+	
+	<div class="container">
+		<div class="form-group">
+			<input type="text" id="inputId" name="id" class="form-control" placeholder="아이디" />
+		</div>
+		<div class="form-group">
+			<input type="password" id="inputPw" name="pw" class="form-control" placeholder="패스워드" />
+		</div>
+		<div class="form-group">
+			<button class="btn btn-primary btn-block" onclick="javascript:submitLogin()">로그인</button>
+		</div>
+	</div>
+	
+</div>
+</html>

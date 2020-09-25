@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorator="layouts/default">
+
+<div layout:fragment="content" style="width:100%;height:100%;">
+
+	<script type="text/javascript">
+	var map = null
+	var markers = []
+	
+	var getBoards = (swLat, swLng, neLat, neLng)=>{
+		$.get(`/api/board/list`, { swLat: swLat, swLng: swLng, neLat: neLat, neLng: neLng })
+		.done((data) => {
+			console.log(data)		
+			setMarkers(data)
+		})
+	}
+	
+	var getBoard = (boardId)=>{
+		$.get(`/api/board/${boardId}`)
+		.done((data) => {
+			console.log(data)
+			
+			$('#imgList').show();
+			$('#imgList').empty()
+			$("#imgListTmpl").tmpl(data).appendTo('#imgList')
+		})
+	}
+	
+	var setMap = ()=>{
+		
+		var mapContainer = document.getElementById('map'),
+		mapOption = { 
+		    center: new kakao.maps.LatLng(37.40202245877246, 127.10345505467590),
+		    level: 3
+		}
+	
+		map = new kakao.maps.Map(mapContainer, mapOption)
+		
+		var bounds = map.getBounds()    
+	    var swLatlng = bounds.getSouthWest()
+	    var neLatlng = bounds.getNorthEast()
+	    
+	    getBoards(swLatlng.getLat(), swLatlng.getLng(), neLatlng.getLat(), neLatlng.getLng())
+		
+		kakao.maps.event.addListener(map, 'idle', ()=>{
+			
+			$('#imgList').hide()
+			
+		    var bounds = map.getBounds()    
+		    var swLatlng = bounds.getSouthWest()
+		    var neLatlng = bounds.getNorthEast()
+		    
+		    getBoards(swLatlng.getLat(), swLatlng.getLng(), neLatlng.getLat(), neLatlng.getLng())
+		})	
+	}
+	
+	var setMarkers = (boards)=>{
+		
+		markers.forEach(marker=>{
+			marker.marker.setMap(null)
+		})
+		
+		markers = []
+		boards.forEach(item => {
+			marker = {
+					marker: new kakao.maps.Marker({
+					    map: map
+					    , position: new kakao.maps.LatLng(item.latitude, item.longitude)
+					})
+					, thumbImgId: item.thumbImgId
+					, boardId: item.boardId
+			}
+			
+			markers.push(marker)
+		})
+		
+		markers.forEach(marker=>{
+			
+			kakao.maps.event.addListener(marker.marker, 'click', makeClickListener(marker.boardId))
+			/* 
+		    var infowindow = new kakao.maps.InfoWindow({
+		        content: `<div><img src="/image/${marker.thumbImgId}" width="150px" height="100px" /></div>` // 인포윈도우에 표시할 내용
+		    });
+	
+		    kakao.maps.event.addListener(marker.marker, 'mouseover', makeOverListener(map, marker.marker, infowindow));
+		    kakao.maps.event.addListener(marker.marker, 'mouseout', makeOutListener(infowindow));
+		    */
+		})
+	}
+	
+	var makeClickListener = (boardId)=>{
+		return ()=>{
+			getBoard(boardId)
+		}
+	}
+	
+	/*
+	//인포윈도우를 표시하는 클로저를 만드는 함수입니다 
+	var makeOverListener = (map, marker, infowindow)=>{
+	    return ()=>{
+	        infowindow.open(map, marker);
+	    };
+	}
+	
+	// 인포윈도우를 닫는 클로저를 만드는 함수입니다 
+	var makeOutListener = (infowindow)=>{
+	    return ()=>{
+	        infowindow.close();
+	    };
+	}
+	*/
+	
+	$(document).ready(()=>{
+		setMap()
+	})
+	</script>
+	
+	<script id="imgListTmpl" type="text/x-jquery-tmpl">
+	<ul class="carousel-indicators">
+		{{each(index,imgId) imgIds}}
+		<li data-target="#imgList" data-slide-to="${index}"></li>
+		{{/each}}
+	</ul>
+	
+	<div class="carousel-inner" style="width:100%;height:100%;">
+		{{each(index,imgId) imgIds}}
+		<div class="carousel-item {{if index == 0}}active{{/if}}" style="width:100%;height:100%;">
+			<img src="/image/${imgId}" alt="IMAGE" width="auto" height="100%" />
+		</div>
+		{{/each}}
+	</div>
+	
+	<a class="carousel-control-prev" href="#imgList" data-slide="prev">
+		<span class="carousel-control-prev-icon"></span>
+	</a>
+	<a class="carousel-control-next" href="#imgList" data-slide="next">
+		<span class="carousel-control-next-icon"></span>
+	</a>
+	</script>
+	
+	<div id="writeBtn" style="position:fixed;top:20px;left:20px;z-index:999;">
+		<a href="/board/write">
+			<button class="btn btn-primary">등록</button>
+		</a>
+	</div>
+	<div id="map" style="width:100%;height:100%;"></div>
+	
+	<div id="imgList"
+		class="carousel slide"
+		data-ride="carousel"
+		style="position:fixed;top:70%;left:0;z-index:999;background-color:rgba(0,0,0,0.7);width:100%;height:30%;text-align:center;display:none;">
+	</div>
+
+</div>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorator="layouts/default">
+
+<div layout:fragment="content" style="width:100%;height:100%;">
+
+	<script type="text/javascript">
+	// 브이 등록
+	var insertBoard = ()=>{
+		
+		// validation
+		if($('#latitude').val() == '' || $('#longitude').val() == ''){
+			alert('지도에서 브이를 등록할 위치를 선택해 주세요 :(')
+			return
+		}
+		
+		var form = $('#writeForm')[0]
+	    var formData = new FormData(form)
+		
+		$.ajax({
+			type: 'POST',
+			enctype: 'multipart/form-data',
+			url: '/api/board',
+			data: formData,
+			processData: false,
+			contentType: false,
+			cache: false,
+			success: function (data) {
+				console.log(data)
+				alert('브이를 등록했습니다 :)')
+				window.location.href='/board/list'
+	        },
+	        error: function (e) {
+				console.log(`ERROR : ${e}`);
+	        }
+	    });
+	}
+	
+	$(document).ready(()=>{
+		var mapContainer = document.getElementById('map'),
+		
+	    mapOption = { 
+	        center: new kakao.maps.LatLng(37.40202245877246, 127.10345505467590),
+	        level: 3
+	    };
+	
+		var map = new kakao.maps.Map(mapContainer, mapOption)
+		
+		var marker = new kakao.maps.Marker({
+		    position: map.getCenter() 
+		})
+		marker.setMap(map)
+		
+		kakao.maps.event.addListener(map, 'click', function(mouseEvent) {        
+		    
+		    var latlng = mouseEvent.latLng; 
+		    
+		    marker.setPosition(latlng);
+		    
+		    $('#latitude').val(latlng.getLat())
+		    $('#longitude').val(latlng.getLng())
+		});
+	})
+	</script>
+	
+	<div id="map" style="width:100%;height:100%;"></div>
+	<div id="writeDiv"
+		style="position:fixed;top:60%;left:0;z-index:999;width:100%;height:40%;background-color:rgba(255,255,255,0.7);">
+		<form id="writeForm">
+			<input type="hidden" id="latitude" name="latitude" placeholder="위도" />
+			<input type="hidden" id="longitude" name="longitude" placeholder="경도" />
+			
+			<div class="form-group">
+				<input type="file" name="uploadFiles" class="form-control" multiple placeholder="제목" />
+			</div>
+			<div class="form-group">
+				<input type="text" name="title" class="form-control" placeholder="제목" />
+			</div>
+			<div class="form-group">
+				<textarea name="content" rows="4" class="form-control" placeholder="내용"></textarea>
+			</div>
+			<div class="form-group">
+				<button type="button" onclick="insertBoard()" class="btn btn-primary btn-block">등록</button>
+			</div>		
+		</form>
+	</div>
+
+</div>
+</html>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="user">
+
+	<select id="getUser" parameterType="map" resultType="UserVO">
+		SELECT id
+			, name
+		FROM user
+		WHERE use_yn = 'Y'
+			AND id = #{id}
+			AND pw = #{pw}
+	</select>
+
+	<insert id="insertUser" parameterType="UserVO">
+		INSERT INTO user (
+			id
+			, pw
+			, name
+			, use_yn
+		)
+		VALUES (
+			#{id}
+			, #{pw}
+			, #{name}
+			, 'Y'
+		)
+	</insert>
+	
+	<update id="updatePassword" parameterType="UserVO">
+		UPDATE user
+		SET pw = #{pw}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="deleteUser" parameterType="map">
+		UPDATE user
+		SET use_yn = 'N'
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
