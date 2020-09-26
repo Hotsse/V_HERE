@@ -39,6 +39,7 @@ public class ContextConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(authInterceptor)
-			.excludePathPatterns("/user/login");
+			.excludePathPatterns("/user/login")
+			.excludePathPatterns("/user/signup");		
 	}
 }

@@ -7,34 +7,42 @@
 <div layout:fragment="content">
 
 	<script type="text/javascript">
-	var submitLogin = ()=>{
+	var submitSignup = ()=>{
 		id = $('#inputId').val()
 		pw = $('#inputPw').val()
+		repw = $('#inputRePw').val()
+		name = $('#inputName').val()
 		
-		if(id == '' || pw == '') {
+		if(id == '' || pw == '' || name == '') {
 			alert('올바른 계정을 입력해 주세요 :(')
 			return;
 		}
+		else if(pw != repw) {
+			alert('패스워드가 일치하지 않습니다 :(\n\n패스워드를 다시 입력해 주세요')
+			$('#inputPw').val('')
+			$('#inputRePw').val('')
+			return;
+		}
 		
-		$.post(`/user/login`, {
+		$.post(`/user/signup`, {
 			id: id
 			, pw: pw
+			, name: name
 		})
 		.done((data)=>{
+			alert('회원가입에 성공했습니다 :)')
 			window.location.href='/'
 		})
 		.fail((e)=>{
 			console.log(e)
-			if(e.status == 401) {
-				alert('아이디 또는 패스워드가 일치하지 않습니다 :(')
-			}
+			alert('잘못된 정보가 입력되었습니다 :(')
 		})
 	}
 	</script>
 	
 	<div class="jumbotron text-center">
 		<h1>V - HERE</h1>
-		<p>당신은 따라만 하세요!</p> 
+		<p>환영합니다!</p> 
 	</div>
 	
 	<div class="container">
@@ -45,12 +53,13 @@
 			<input type="password" id="inputPw" name="pw" class="form-control" placeholder="패스워드" />
 		</div>
 		<div class="form-group">
-			<button class="btn btn-primary btn-block" onclick="javascript:submitLogin()">로그인</button>
+			<input type="password" id="inputRePw" class="form-control" placeholder="패스워드확인" />
 		</div>
 		<div class="form-group">
-			<a href="/user/signup">
-				<button class="btn btn-secondary btn-block">회원가입</button>
-			</a>
+			<input type="text" id="inputName" name="name" class="form-control" placeholder="닉네임" />
+		</div>
+		<div class="form-group">
+			<button class="btn btn-primary btn-block" onclick="javascript:submitSignup()">회원가입</button>
 		</div>
 	</div>
 	

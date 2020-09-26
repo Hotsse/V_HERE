@@ -73,8 +73,8 @@ public class UserController {
 	 * @return
 	 * @throws Exception
 	 */
-	@PostMapping
-	public ResponseEntity<Void> insertUser(@RequestBody UserVO user) throws Exception {
+	@PostMapping(value = "/signup")
+	public ResponseEntity<Void> insertUser(UserVO user) throws Exception {
 		
 		if(!this.userService.insertUser(user)) {
 			return ResponseEntity.badRequest().build();
@@ -91,7 +91,7 @@ public class UserController {
 	 * @return
 	 * @throws Exception
 	 */
-	@DeleteMapping
+	@DeleteMapping(value = "/signout")
 	public ResponseEntity<Void> deleteUser(HttpSession session) throws Exception {
 		
 		String id = (String)session.getAttribute("id");

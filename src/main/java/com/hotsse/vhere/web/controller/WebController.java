@@ -18,6 +18,11 @@ public class WebController extends BaseController {
 		return "pages/user/login";
 	}
 	
+	@GetMapping(value = "/user/signup")
+	public String userSignup() throws Exception {
+		return "pages/user/signup";
+	}
+	
 	@GetMapping(value = "/board/list")
 	public String boardList() throws Exception {
 		return "pages/board/list";
