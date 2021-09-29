@@ -2,6 +2,7 @@ package com.hotsse.vhere.api.board.vo;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -22,4 +23,8 @@ public class BoardVO {
 	private Date regDtt;
 	private Integer thumbImgId;
 	private List<Integer> imgIds;
+	
+	public Optional<List<Integer>> getImgIds() {
+		return Optional.ofNullable(this.imgIds);
+	}
 }

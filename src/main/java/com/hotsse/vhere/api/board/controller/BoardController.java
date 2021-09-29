@@ -1,6 +1,7 @@
 package com.hotsse.vhere.api.board.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
@@ -64,11 +65,16 @@ public class BoardController extends BaseController {
 	public ResponseEntity<BoardVO> getBoard(
 			@PathVariable(name = "boardId", required = true) int boardId) throws Exception {
 		
-		BoardVO board = this.boardService.getBoard(boardId);
-		if(board != null) {
-			List<Integer> imgIds = this.imageService.getImageIds(boardId);
-			board.setImgIds(imgIds);
-		}
+		BoardVO board = Optional.ofNullable(this.boardService.getBoard(boardId))
+				.map(b -> {
+					try {
+						b.setImgIds(this.imageService.getImageIds(boardId));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					return b;
+				})
+				.orElseGet(null);
 		
 		return ResponseEntity.ok(board);
 	}
