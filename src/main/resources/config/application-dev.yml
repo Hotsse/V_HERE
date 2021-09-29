@@ -12,4 +12,4 @@ spring:
     password: 1234
     
 file:
-  path: C:/storage/vhere
+  path: C:/storages/vhere
