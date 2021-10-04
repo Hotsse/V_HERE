@@ -57,13 +57,16 @@
 		})	
 	}
 	
-	var setMarkers = (boards)=>{
+	var setMarkers = (boards) => {
 		
 		markers.forEach(marker=>{
 			marker.marker.setMap(null)
 		})
 		
 		markers = []
+		
+		if(!boards) return;
+		
 		boards.forEach(item => {
 			marker = {
 					marker: new kakao.maps.Marker({
