@@ -1,5 +1,6 @@
 package com.hotsse.vhere.api.board.vo;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +21,7 @@ public class BoardVO {
 	private double longitude;
 	private int viewCnt;
 	private String regId;
-	private Date regDtt;
+	private LocalDateTime regDtt;
 	private Integer thumbImgId;
 	private List<Integer> imgIds;
 	
