@@ -1,7 +1,6 @@
 package com.hotsse.vhere.api.board.vo;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
