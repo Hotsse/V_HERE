@@ -1,12 +1,10 @@
 package com.hotsse.vhere.user.dao;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.stereotype.Repository;
-
 import com.hotsse.vhere.core.base.BaseDao;
 import com.hotsse.vhere.user.vo.UserVO;
+import org.springframework.stereotype.Repository;
+
+import java.util.Map;
 
 @Repository
 public class UserDao extends BaseDao {
@@ -20,10 +18,11 @@ public class UserDao extends BaseDao {
 	 * @throws Exception
 	 */
 	public UserVO getUser(String id, String pw) throws Exception {
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("id", id);
-		param.put("pw", pw);
-		
+		Map<String, Object> param = Map.of(
+				"id", id,
+				"pw", pw
+		);
+
 		return this.sqlSession.selectOne("user.getUser", param);
 	}
 	
@@ -57,9 +56,10 @@ public class UserDao extends BaseDao {
 	 * @throws Exception
 	 */
 	public int deleteUser(String id) throws Exception {
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("id", id);
-		
+		Map<String, Object> param = Map.of(
+				"id", id
+		);
+
 		return this.sqlSession.update("user.deleteUser", param);
 	}
 }

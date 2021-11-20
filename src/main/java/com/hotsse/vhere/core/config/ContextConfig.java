@@ -1,5 +1,6 @@
 package com.hotsse.vhere.core.config;
 
+import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,8 +10,6 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 import com.hotsse.vhere.core.interceptor.AuthInterceptor;
-
-import nz.net.ultraq.thymeleaf.LayoutDialect;
 
 @Configuration
 public class ContextConfig implements WebMvcConfigurer {

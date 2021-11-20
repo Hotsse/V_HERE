@@ -1,13 +1,11 @@
 package com.hotsse.vhere.api.image.dao;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Repository;
-
 import com.hotsse.vhere.api.image.vo.ImageVO;
 import com.hotsse.vhere.core.base.BaseDao;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ImageDao extends BaseDao {
@@ -20,8 +18,9 @@ public class ImageDao extends BaseDao {
 	 * @throws Exception
 	 */
 	public List<Integer> getImageIds(int boardId) throws Exception {
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("boardId", boardId);
+		Map<String, Object> param = Map.of(
+				"boardId", boardId
+		);
 		
 		return this.sqlSession.selectList("image.getImageIds", param);
 	}
@@ -34,8 +33,9 @@ public class ImageDao extends BaseDao {
 	 * @throws Exception
 	 */
 	public List<ImageVO> getImages(int boardId) throws Exception {
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("boardId", boardId);
+		Map<String, Object> param = Map.of(
+				"boardId", boardId
+		);
 		
 		return this.sqlSession.selectList("image.getImages", param);
 	}
@@ -47,8 +47,9 @@ public class ImageDao extends BaseDao {
 	 * @throws Exception
 	 */
 	public ImageVO getImage(int imgId) throws Exception {
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("imgId", imgId);
+		Map<String, Object> param = Map.of(
+				"imgId", imgId
+		);
 		
 		return this.sqlSession.selectOne("image.getImage", param);
 	}
@@ -73,8 +74,9 @@ public class ImageDao extends BaseDao {
 	 * @throws Exception
 	 */
 	public int deleteImage(int imgId) throws Exception {
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("imgId", imgId);
+		Map<String, Object> param = Map.of(
+				"imgId", imgId
+		);
 		
 		return this.sqlSession.update("image.deleteImage", param);
 	}
