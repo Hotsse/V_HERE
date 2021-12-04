@@ -18,8 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.hotsse.vhere.api.board.dto.BoardDto;
 import com.hotsse.vhere.api.board.service.BoardService;
-import com.hotsse.vhere.api.board.vo.BoardVO;
 import com.hotsse.vhere.api.image.service.ImageService;
 import com.hotsse.vhere.core.base.BaseController;
 
@@ -44,13 +45,13 @@ public class BoardController extends BaseController {
 	 * @throws Exception
 	 */
 	@GetMapping
-	public ResponseEntity<List<BoardVO>> getBoards(
+	public ResponseEntity<List<BoardDto>> getBoards(
 			@RequestParam(name = "swLat", defaultValue = "-90.0") double swLat
 			, @RequestParam(name = "swLng", defaultValue = "-180.0") double swLng
 			, @RequestParam(name = "neLat", defaultValue = "90.0") double neLat
 			, @RequestParam(name = "neLng", defaultValue = "180.0") double neLng) throws Exception {
 		
-		List<BoardVO> boards = this.boardService.getBoards(swLat, swLng, neLat, neLng);
+		List<BoardDto> boards = this.boardService.getBoards(swLat, swLng, neLat, neLng);
 		return ResponseEntity.ok(boards);
 	}
 	
@@ -58,14 +59,14 @@ public class BoardController extends BaseController {
 	 * 게시글 조회
 	 * 
 	 * @param boardId 게시글번호
-	 * @return {@link BoardVO} 게시글
+	 * @return {@link BoardDto} 게시글
 	 * @throws Exception
 	 */
 	@GetMapping(value = "/{boardId}")
-	public ResponseEntity<BoardVO> getBoard(
+	public ResponseEntity<BoardDto> getBoard(
 			@PathVariable(name = "boardId", required = true) int boardId) throws Exception {
 		
-		BoardVO board = Optional.ofNullable(this.boardService.getBoard(boardId))
+		BoardDto board = Optional.ofNullable(this.boardService.getBoard(boardId))
 				.map(b -> {
 					try {
 						b.setImgIds(this.imageService.getImageIds(boardId));
@@ -90,15 +91,15 @@ public class BoardController extends BaseController {
 	 */
 	@PostMapping
 	public ResponseEntity<Void> insertBoard(
-			BoardVO board
+			BoardDto boardDto
 			, @RequestPart(name = "uploadFiles") List<MultipartFile> files
 			, HttpSession session
 			) throws Exception {
 		
 		String id = (String)session.getAttribute("id");
-		board.setRegId(id);
+		boardDto.setRegId(id);
 		
-		int boardId = this.boardService.insertBoard(board);
+		int boardId = this.boardService.insertBoard(boardDto);
 		
 		for(MultipartFile file : files) {
 			this.imageService.uploadImage(file, boardId);
@@ -115,7 +116,7 @@ public class BoardController extends BaseController {
 	 * @throws Exception
 	 */
 	@PutMapping
-	public ResponseEntity<Void> updateBoard(@RequestBody BoardVO board) throws Exception {
+	public ResponseEntity<Void> updateBoard(@RequestBody BoardDto board) throws Exception {
 		if(!this.boardService.updateBoard(board)) {
 			return ResponseEntity.badRequest().build();
 		}

@@ -28,7 +28,7 @@ public class UserService {
 	 */
 	public UserDto getUser(String id, String pw) throws Exception {
 		
-		Optional<User> user = userRepository.findById(id);
+		Optional<User> user = userRepository.findAvailableById(id);
 		
 		if(user.isEmpty() 
 				|| !DigestUtils.sha256Hex(pw).equalsIgnoreCase(user.get().getPw())) {
@@ -73,11 +73,11 @@ public class UserService {
 		try {
 			User user = userRepository.findById(userDto.getId()).get();
 			user.setPw(DigestUtils.sha256Hex(userDto.getPw())); //SHA256 해시
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
-		return true;
 	}
 	
 	/**
@@ -87,14 +87,16 @@ public class UserService {
 	 * @return {@link True} 성공 / {@link False} 실패
 	 * @throws Exception
 	 */
+	@Transactional
 	public boolean deleteUser(String id) throws Exception {
 		
 		try {
-			userRepository.deleteById(id);
+			User user = userRepository.findById(id).get();
+			user.setUseYn("N");
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
-		return true;
 	}
 }

@@ -1,18 +1,22 @@
 package com.hotsse.vhere.api.board.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hotsse.vhere.api.board.dao.BoardDao;
-import com.hotsse.vhere.api.board.vo.BoardVO;
+import com.hotsse.vhere.api.board.dto.BoardDto;
+import com.hotsse.vhere.api.board.entity.Board;
+import com.hotsse.vhere.api.board.repository.BoardRepository;
 
 @Service
 public class BoardService {
-
+	
 	@Autowired
-	private BoardDao boardDao;
+	private BoardRepository boardRepository;
 	
 	/**
 	 * 게시글 리스트 조회
@@ -24,19 +28,24 @@ public class BoardService {
 	 * @return {@link List} 게시글 리스트
 	 * @throws Exception
 	 */
-	public List<BoardVO> getBoards(double swLat, double swLng, double neLat, double neLng) throws Exception {
-		return this.boardDao.getBoards(swLat, swLng, neLat, neLng);
+	public List<BoardDto> getBoards(double swLat, double swLng, double neLat, double neLng) throws Exception {		
+		return boardRepository.findAllByCoordinate(swLat, swLng, neLat, neLng)
+			.stream()
+			.map(BoardDto::new)
+			.collect(Collectors.toList());
 	}
 	
 	/**
 	 * 게시글 조회
 	 * 
 	 * @param boardId 게시글번호
-	 * @return {@link BoardVO} 게시글
+	 * @return {@link BoardDto} 게시글
 	 * @throws Exception
 	 */
-	public BoardVO getBoard(int boardId) throws Exception {
-		return this.boardDao.getBoard(boardId);
+	public BoardDto getBoard(int boardId) throws Exception {		
+		return boardRepository.findById(boardId)
+			.map(BoardDto::new)
+			.orElse(null);
 	}
 	
 	/**
@@ -46,9 +55,15 @@ public class BoardService {
 	 * @return 생성된 게시글번호
 	 * @throws Exception
 	 */
-	public int insertBoard(BoardVO board) throws Exception {
-		int boardId = this.boardDao.insertBoard(board);
-		return boardId;
+	public int insertBoard(BoardDto boardDto) throws Exception {		
+		Board board = new Board(
+				boardDto.getTitle()
+				, boardDto.getContent()
+				, boardDto.getLatitude()
+				, boardDto.getLongitude()
+				, boardDto.getRegId());		
+		Board newBoard = boardRepository.save(board);
+		return newBoard.getId();
 	}
 	
 	/**
@@ -58,8 +73,20 @@ public class BoardService {
 	 * @return true = 성공 / false = 실패
 	 * @throws Exception
 	 */
-	public boolean updateBoard(BoardVO board) throws Exception {
-		return (this.boardDao.updateBoard(board) == 1);
+	@Transactional
+	public boolean updateBoard(BoardDto boardDto) throws Exception {
+		
+		try {
+			Board board = boardRepository.findById(boardDto.getBoardId()).get();		
+			board.setTitle(boardDto.getTitle());
+			board.setContent(boardDto.getContent());
+			board.setLatitude(boardDto.getLatitude());
+			board.setLongitude(boardDto.getLongitude());
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	/**
@@ -69,7 +96,16 @@ public class BoardService {
 	 * @return true = 성공 / false = 실패
 	 * @throws Exception
 	 */
+	@Transactional
 	public boolean deleteBoard(int boardId) throws Exception {
-		return (this.boardDao.deleteBoard(boardId) == 1);
+		
+		try {
+			Board board = boardRepository.findById(boardId).get();
+			board.setUseYn("N");
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 }
