@@ -2,7 +2,6 @@ package com.hotsse.vhere.user.controller;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,12 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hotsse.vhere.user.dto.UserDto;
 import com.hotsse.vhere.user.service.UserService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping(value = "/user")
+@RequiredArgsConstructor
 public class UserController {
 
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 	
 	/**
 	 * 로그인

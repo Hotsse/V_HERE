@@ -5,18 +5,19 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hotsse.vhere.user.dto.UserDto;
 import com.hotsse.vhere.user.entity.User;
 import com.hotsse.vhere.user.repository.UserRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class UserService {
 	
-	@Autowired
-	private UserRepository userRepository;
+	private final UserRepository userRepository;
 	
 	/**
 	 * 회원 정보 조회

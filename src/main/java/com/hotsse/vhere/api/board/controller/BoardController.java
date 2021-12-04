@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,15 +23,16 @@ import com.hotsse.vhere.api.board.service.BoardService;
 import com.hotsse.vhere.api.image.service.ImageService;
 import com.hotsse.vhere.core.base.BaseController;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping(value = "/api/board")
+@RequiredArgsConstructor
 public class BoardController extends BaseController {
 
-	@Autowired
-	private BoardService boardService;
+	private final BoardService boardService;
 	
-	@Autowired
-	private ImageService imageService;
+	private final ImageService imageService;
 	
 	/**
 	 * 게시글 리스트 조회

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.hotsse.vhere.api.image.vo.ImageVO;
+import com.hotsse.vhere.api.image.dto.ImageDto;
 import com.hotsse.vhere.core.base.BaseService;
 
 @Service
@@ -68,7 +68,7 @@ public class FileService extends BaseService {
 	 * @param res Response 객체
 	 * @throws Exception
 	 */
-	public void downloadImg(ImageVO img, HttpServletResponse res) throws Exception {
+	public void downloadImg(ImageDto img, HttpServletResponse res) throws Exception {
 		
 		if(img != null) {
 			String filePath = this.storagePath + img.getFilePath();

@@ -5,18 +5,19 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hotsse.vhere.api.board.dto.BoardDto;
 import com.hotsse.vhere.api.board.entity.Board;
 import com.hotsse.vhere.api.board.repository.BoardRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class BoardService {
 	
-	@Autowired
-	private BoardRepository boardRepository;
+	private final BoardRepository boardRepository;
 	
 	/**
 	 * 게시글 리스트 조회
