@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hotsse.vhere.user.dto.UserDto;
 import com.hotsse.vhere.user.service.UserService;
-import com.hotsse.vhere.user.vo.UserVO;
 
 @RestController
 @RequestMapping(value = "/user")
@@ -30,17 +30,16 @@ public class UserController {
 	 * @param id 아이디
 	 * @param pw 패스워드
 	 * @param session 세션
-	 * @return {@link UserVO} 회원정보
+	 * @return {@link UserDto} 회원정보
 	 * @throws Exception
 	 */
 	@PostMapping("/login")
-	public ResponseEntity<UserVO> login(
+	public ResponseEntity<UserDto> login(
 			@RequestParam(name = "id", required = true) String id
 			, @RequestParam(name = "pw", required = true) String pw
 			, HttpSession session) throws Exception {
 		
-		UserVO user = this.userService.getUser(id, pw);
-		
+		UserDto user = this.userService.getUser(id, pw);
 		if(user == null) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
 					.build();
@@ -74,7 +73,7 @@ public class UserController {
 	 * @throws Exception
 	 */
 	@PostMapping(value = "/signup")
-	public ResponseEntity<Void> insertUser(UserVO user) throws Exception {
+	public ResponseEntity<Void> insertUser(UserDto user) throws Exception {
 		
 		if(!this.userService.insertUser(user)) {
 			return ResponseEntity.badRequest().build();
@@ -116,17 +115,17 @@ public class UserController {
 	 */
 	@PutMapping(value = "/password")
 	public ResponseEntity<Void> updatePassword(
-			@RequestBody UserVO user
+			@RequestBody UserDto userDto
 			, HttpSession session) throws Exception {
 		
 		String id = (String)session.getAttribute("id");
 		
 		if(id == null) {
 			return ResponseEntity.badRequest().build();
-		}
+		}		
+		userDto.setId(id);
 		
-		user.setId(id);
-		if(!this.userService.updatePassword(user)) {
+		if(!this.userService.updatePassword(userDto)) {
 			return ResponseEntity.badRequest().build();
 		}
 		return ResponseEntity.ok()

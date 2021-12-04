@@ -1,32 +1,40 @@
 package com.hotsse.vhere.user.service;
 
+import java.util.Optional;
+
+import javax.transaction.Transactional;
+
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hotsse.vhere.user.dao.UserDao;
-import com.hotsse.vhere.user.vo.UserVO;
+import com.hotsse.vhere.user.dto.UserDto;
+import com.hotsse.vhere.user.entity.User;
+import com.hotsse.vhere.user.repository.UserRepository;
 
 @Service
 public class UserService {
-
+	
 	@Autowired
-	private UserDao userDao;
+	private UserRepository userRepository;
 	
 	/**
 	 * 회원 정보 조회
 	 * 
 	 * @param id 아이디
 	 * @param pw 패스워드
-	 * @return {@link UserVO} 회원정보
+	 * @return {@link UserDto} 회원정보
 	 * @throws Exception
 	 */
-	public UserVO getUser(String id, String pw) throws Exception {
+	public UserDto getUser(String id, String pw) throws Exception {
 		
-		//SHA256 해시
-		pw = DigestUtils.sha256Hex(pw);
+		Optional<User> user = userRepository.findById(id);
 		
-		return this.userDao.getUser(id, pw);
+		if(user.isEmpty() 
+				|| !DigestUtils.sha256Hex(pw).equalsIgnoreCase(user.get().getPw())) {
+			return null;
+		}
+		return user.map(UserDto::new).get();
 	}
 	
 	/**
@@ -36,13 +44,20 @@ public class UserService {
 	 * @return {@link True} 성공 / {@link False} 실패
 	 * @throws Exception
 	 */
-	public boolean insertUser(UserVO user) throws Exception {
+	public boolean insertUser(UserDto userDto) throws Exception {
 		
 		//SHA256 해시
-		String sha256Pw = DigestUtils.sha256Hex(user.getPw());
-		user.setPw(sha256Pw);
+		String sha256Pw = DigestUtils.sha256Hex(userDto.getPw());		
+		User user = new User(userDto.getId(), sha256Pw, userDto.getName());
 		
-		return (this.userDao.insertUser(user) == 1);
+		try {
+			// TODO: PK 의 존재로 persist 가 아닌 merge 가 실행됨. reg_dtt 를 생성하거나 use_yn 으로 isNew 조건을 변경할 것 
+			userRepository.save(user);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 	
 	/**
@@ -52,13 +67,17 @@ public class UserService {
 	 * @return {@link True} 성공 / {@link False} 실패
 	 * @throws Exception
 	 */
-	public boolean updatePassword(UserVO user) throws Exception {
+	@Transactional
+	public boolean updatePassword(UserDto userDto) throws Exception {
 		
-		//SHA256 해시
-		String sha256Pw = DigestUtils.sha256Hex(user.getPw());
-		user.setPw(sha256Pw);
-		
-		return (this.userDao.updatePassword(user) == 1);
+		try {
+			User user = userRepository.findById(userDto.getId()).get();
+			user.setPw(DigestUtils.sha256Hex(userDto.getPw())); //SHA256 해시
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 	
 	/**
@@ -69,6 +88,13 @@ public class UserService {
 	 * @throws Exception
 	 */
 	public boolean deleteUser(String id) throws Exception {
-		return (this.userDao.deleteUser(id) == 1);
+		
+		try {
+			userRepository.deleteById(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 }
