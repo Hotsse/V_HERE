@@ -6,53 +6,41 @@
 
 <div layout:fragment="content">
 
-	<script type="text/javascript">
-	var submitLogin = ()=>{
-		id = $('#inputId').val()
-		pw = $('#inputPw').val()
-		
-		if(id == '' || pw == '') {
-			alert('올바른 계정을 입력해 주세요 :(')
-			return;
-		}
-		
-		$.post(`/user/login`, {
-			id: id
-			, pw: pw
-		})
-		.done((data)=>{
-			window.location.href='/'
-		})
-		.fail((e)=>{
-			console.log(e)
-			if(e.status == 401) {
-				alert('아이디 또는 패스워드가 일치하지 않습니다 :(')
-			}
-		})
-	}
-	</script>
-	
 	<div class="jumbotron text-center">
 		<h1>V - HERE</h1>
 		<p>당신은 따라만 하세요!</p> 
 	</div>
 	
 	<div class="container">
-		<div class="form-group">
-			<input type="text" id="inputId" name="id" class="form-control" placeholder="아이디" />
+		<div
+			th:if="${param.error}"
+			class="alert alert-danger alert-dismissible fade show"
+		>
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<strong>올바른 아이디와 패스워드를 입력해 주세요.</strong>
 		</div>
-		<div class="form-group">
-			<input type="password" id="inputPw" name="pw" class="form-control" placeholder="패스워드" />
+		<div
+			th:if="${param.logout}"
+			class="alert alert-secondary alert-dismissible fade show"
+		>
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<strong>로그아웃 되었습니다.</strong>
 		</div>
-		<div class="form-group">
-			<button class="btn btn-primary btn-block" onclick="javascript:submitLogin()">로그인</button>
-		</div>
-		<div class="form-group">
-			<a href="/user/signup">
-				<button class="btn btn-secondary btn-block">회원가입</button>
-			</a>
-		</div>
+		<form th:action="@{/user/login}" method="post">
+			<div class="form-group">
+				<input type="text" name="username" class="form-control" placeholder="아이디" />
+			</div>
+			<div class="form-group">
+				<input type="password" name="password" class="form-control" placeholder="패스워드" />
+			</div>
+			<div class="form-group">
+				<button type="submit" class="btn btn-primary btn-block">로그인</button>
+			</div>
+			<div class="form-group">
+				<button type="button" class="btn btn-secondary btn-block" onclick="javascript:window.location.href='/user/signup';">회원가입</button>
+			</div>
+		</form>
 	</div>
-	
+
 </div>
 </html>

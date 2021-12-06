@@ -22,7 +22,7 @@ public class User {
 	@Column(length = 50)
 	private String id;
 	
-	@Column(columnDefinition = "CHAR", length = 256)
+	@Column(columnDefinition = "CHAR", length = 60)
 	private String pw;
 	
 	@Column(length = 50)

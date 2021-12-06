@@ -1,21 +1,18 @@
 package com.hotsse.vhere.core.config;
 
-import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
-import com.hotsse.vhere.core.interceptor.AuthInterceptor;
+import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
 
 @Configuration
 public class ContextConfig implements WebMvcConfigurer {
-
-	@Autowired
-	private AuthInterceptor authInterceptor;
 	
 	@Bean
     public SpringTemplateEngine templateEngine() {
@@ -35,10 +32,12 @@ public class ContextConfig implements WebMvcConfigurer {
         return templateResolver;
     }
 	
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+	
 	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(authInterceptor)
-			.excludePathPatterns("/user/login")
-			.excludePathPatterns("/user/signup");		
+	public void addInterceptors(InterceptorRegistry registry) {		
 	}
 }
