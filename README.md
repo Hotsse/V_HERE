@@ -3,6 +3,8 @@
 
 - Spring Boot 2.6.1
 - Java 11
+- Maven Build
 - Thymeleaf
 - Spring Security
-- JPA (Hibernate)
+- H2 Database
+- JPA (Hibernate) + JDBC MyBatis
