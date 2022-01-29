@@ -1,5 +1,7 @@
 package com.hotsse.vhere.user;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,10 +29,9 @@ public class UserTest {
 	void encodeTest() throws Exception {
 		
 		final String raw = "test1234";
+		final String encrypt = passwordEncoder.encode(raw);
 		
-		final String r1 = passwordEncoder.encode(raw);
-		
-		System.out.println(r1);
-		System.out.println(passwordEncoder.matches(raw, r1));
+		System.out.println(encrypt);
+		assertTrue(passwordEncoder.matches(raw, encrypt));
 	}
 }
