@@ -24,6 +24,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  devtools:
+    livereload:
+      enabled: true
         
 logging.level:
     org.hibernate.SQL: debug
