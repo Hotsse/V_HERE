@@ -8,3 +8,4 @@
 - Spring Security
 - H2 Database
 - JPA (Hibernate) + JDBC MyBatis
+- Service on AWS
