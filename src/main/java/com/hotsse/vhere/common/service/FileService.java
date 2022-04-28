@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -68,6 +69,7 @@ public class FileService extends BaseService {
 	 * @param res Response 객체
 	 * @throws Exception
 	 */
+	@Retryable(maxAttempts = 2)
 	public void downloadImg(ImageDto img, HttpServletResponse res) throws Exception {
 		
 		if(img != null) {
