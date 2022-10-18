@@ -46,8 +46,7 @@ public class UserController {
 	/**
 	 * 패스워드 변경
 	 * 
-	 * @param user 회원정보
-	 * @param session 세션
+	 * @param userDto 회원정보
 	 * @return
 	 * @throws Exception
 	 */
@@ -58,7 +57,7 @@ public class UserController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		SecurityUser user = (SecurityUser) auth.getPrincipal();
 		String id = user.getUsername();
-		
+
 		if(id == null) {
 			return ResponseEntity.badRequest().build();
 		}		
@@ -74,7 +73,7 @@ public class UserController {
 	/**
 	 * 회원탈퇴
 	 * 
-	 * @param session 세션
+	 * @param response 응답
 	 * @return
 	 * @throws Exception
 	 */

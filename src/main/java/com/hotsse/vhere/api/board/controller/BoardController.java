@@ -1,29 +1,19 @@
 package com.hotsse.vhere.api.board.controller;
 
-import java.util.List;
-import java.util.Optional;
-
-import javax.servlet.http.HttpSession;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.hotsse.vhere.api.board.dto.BoardDto;
 import com.hotsse.vhere.api.board.service.BoardService;
 import com.hotsse.vhere.api.image.service.ImageService;
 import com.hotsse.vhere.core.base.BaseController;
-
+import com.hotsse.vhere.user.dto.SecurityUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/board")
@@ -83,9 +73,8 @@ public class BoardController extends BaseController {
 	/**
 	 * 게시글 생성
 	 * 
-	 * @param board 게시글
+	 * @param boardDto 게시글
 	 * @param files 첨부파일들(이미지)
-	 * @param session 세션
 	 * @return
 	 * @throws Exception
 	 */
@@ -93,10 +82,12 @@ public class BoardController extends BaseController {
 	public ResponseEntity<Void> insertBoard(
 			BoardDto boardDto
 			, @RequestPart(name = "uploadFiles") List<MultipartFile> files
-			, HttpSession session
 			) throws Exception {
-		
-		String id = (String)session.getAttribute("id");
+
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		SecurityUser user = (SecurityUser) auth.getPrincipal();
+		String id = user.getUsername();
+
 		boardDto.setRegId(id);
 		
 		int boardId = this.boardService.insertBoard(boardDto);
