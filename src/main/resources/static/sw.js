@@ -23,21 +23,6 @@ self.addEventListener('widgetclick', (event) => {
 // periodic sync or widget-related state.
 self.addEventListener('widgetuninstall', (event) => {});
 
-// push 이벤트 정의
-/*
-self.addEventListener('push', function(event) {
-
-    // 알림 데이터 받기
-    const notificationData = event.data;
-
-    // 알림 열기
-    event.waitUntil(self.registration.showNotification("ㅁㄴㅇㄹ1" + notificationData.title, {
-        body: "ㅁㄴㅇㄹ2" + notificationData.message,
-        icon: notificationData.icon
-    }));
-});
- */
-
 const updateWidget = async (event) => {
 // The widget definition represents the fields specified in the manifest.
     const widgetDefinition = event.widget.definition;

@@ -25,6 +25,7 @@ public class BoardDto {
 	private double latitude;
 	private double longitude;
 	private int viewCnt;
+	private int likeCnt;
 	private String regId;
 	private LocalDateTime regDtt;
 	private List<Integer> imgIds;
@@ -40,6 +41,7 @@ public class BoardDto {
 		this.latitude = board.getLatitude();
 		this.longitude = board.getLongitude();
 		this.viewCnt = board.getViewCnt();
+		this.likeCnt = board.getLikeCnt();
 		this.regId = board.getRegId();
 		this.regDtt = board.getRegDtt();
 		

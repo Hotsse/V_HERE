@@ -1,23 +1,23 @@
 package com.hotsse.vhere.api.board.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.transaction.Transactional;
-
-import org.springframework.stereotype.Service;
-
 import com.hotsse.vhere.api.board.dto.BoardDto;
 import com.hotsse.vhere.api.board.entity.Board;
 import com.hotsse.vhere.api.board.repository.BoardRepository;
-
+import com.hotsse.vhere.api.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class BoardService {
 	
 	private final BoardRepository boardRepository;
+
+	private final NotificationService notificationService;
 	
 	/**
 	 * 게시글 리스트 조회
@@ -108,5 +108,17 @@ public class BoardService {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	@Transactional
+	public int likeBoard(int boardId) throws Exception {
+		//좋아요+1
+		Board board = boardRepository.findById(boardId).get();
+		final int nextLikeCnt = board.getLikeCnt() + 1;
+		board.setLikeCnt(nextLikeCnt);
+		//푸시발송
+		notificationService.sendPushNotification(board.getRegId());
+
+		return nextLikeCnt;
 	}
 }

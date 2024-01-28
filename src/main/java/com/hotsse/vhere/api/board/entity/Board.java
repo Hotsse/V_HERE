@@ -40,6 +40,8 @@ public class Board {
 	private double longitude;
 	
 	private int viewCnt;
+
+	private int likeCnt;
 	
 	private String regId;
 	

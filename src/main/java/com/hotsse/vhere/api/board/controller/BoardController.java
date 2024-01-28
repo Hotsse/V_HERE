@@ -131,5 +131,13 @@ public class BoardController extends BaseController {
 		
 		return ResponseEntity.noContent().build();
 	}
-	
+
+	@PostMapping(value = "/like/{boardId}")
+	public ResponseEntity<Integer> like(
+			@PathVariable(name = "boardId") int boardId) throws Exception {
+
+		int likeCount = boardService.likeBoard(boardId);
+		return ResponseEntity.ok(likeCount);
+	}
+
 }

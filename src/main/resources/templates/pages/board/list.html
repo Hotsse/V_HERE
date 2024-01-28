@@ -9,6 +9,7 @@
 	<script type="text/javascript">
 	var map = null
 	var markers = []
+	var selectedBoardId = null;
 	
 	var getBoards = (swLat, swLng, neLat, neLng)=>{
 		$.get(`/api/board`, { swLat: swLat, swLng: swLng, neLat: neLat, neLng: neLng })
@@ -22,7 +23,9 @@
 		$.get(`/api/board/${boardId}`)
 		.done((data) => {
 			console.log(data)
-			
+
+			selectedBoardId = boardId;
+			$('#likeBtn').show();
 			$('#imgList').show();
 			$('#imgList').empty()
 			$("#imgListTmpl").tmpl(data).appendTo('#imgList')
@@ -33,7 +36,7 @@
 		
 		var mapContainer = document.getElementById('map'),
 		mapOption = { 
-		    center: new kakao.maps.LatLng(37.40202245877246, 127.10345505467590),
+		    center: new kakao.maps.LatLng(37.395627914562425, 127.11042549777022),
 		    level: 3
 		}
 	
@@ -46,7 +49,8 @@
 	    getBoards(swLatlng.getLat(), swLatlng.getLng(), neLatlng.getLat(), neLatlng.getLng())
 		
 		kakao.maps.event.addListener(map, 'idle', ()=>{
-			
+
+			$("#likeBtn").hide();
 			$('#imgList').hide()
 			
 		    var bounds = map.getBounds()    
@@ -98,6 +102,13 @@
 			getBoard(boardId)
 		}
 	}
+
+	var addLike = () => {
+		$.post(`/api/board/like/${selectedBoardId}`)
+				.done((data) => {
+					console.log(data)
+				})
+	}
 	
 	/*
 	//인포윈도우를 표시하는 클로저를 만드는 함수입니다 
@@ -142,19 +153,19 @@
 		<span class="carousel-control-next-icon"></span>
 	</a>
 	</script>
-	
-	<div id="writeBtn" style="position:fixed;top:20px;left:20px;z-index:999;">
+
+	<div id="writeBtn" style="position:fixed;top:20px;right:20px;z-index:999;">
 		<a href="/board/write">
 			<button class="btn btn-primary">등록</button>
 		</a>
 	</div>
 	<div id="map" style="width:100%;height:100%;"></div>
-	
+
+	<button id="likeBtn" class="btn btn-secondary" style="position: fixed;top:65%;right:1%;z-index:999;display:none;" onclick="javascript:addLike();">👍 좋아요</button>
 	<div id="imgList"
 		class="carousel slide"
 		data-ride="carousel"
 		style="position:fixed;top:70%;left:0;z-index:999;background-color:rgba(0,0,0,0.7);width:100%;height:30%;text-align:center;display:none;">
 	</div>
-
 </div>
 </html>
