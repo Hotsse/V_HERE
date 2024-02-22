@@ -2,7 +2,7 @@
       "relation": ["delegate_permission/common.handle_all_urls"],
       "target": {
         "namespace": "android_app",
-        "package_name": "app.ngrok_free.efd7_211_56_96_51.twa",
-        "sha256_cert_fingerprints": ["E8:B3:B8:08:9A:9E:5B:63:A6:4C:38:F2:28:49:C9:76:CD:69:33:94:F5:27:05:92:EF:70:8D:5D:29:CB:FE:52"]
+        "package_name": "app.ngrok_free.dcae_218_155_104_191.twa",
+        "sha256_cert_fingerprints": ["86:23:1C:60:EF:54:C9:2D:18:76:A1:14:8F:0B:CA:F5:3B:4E:2F:2C:17:C4:01:76:54:4D:64:3A:DB:2F:5C:4A"]
       }
     }]

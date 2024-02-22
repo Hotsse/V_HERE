@@ -13,6 +13,8 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
+
+//pc, android 백그라운드에서 push 를 수신한 경우 로직
 messaging.onBackgroundMessage((payload) => {
     console.log(
         '[firebase-messaging-sw.js] Received background message ',

@@ -40,6 +40,9 @@
 				<button type="button" class="btn btn-secondary btn-block" onclick="javascript:window.location.href='/user/signup';">회원가입</button>
 			</div>
 		</form>
+		<button class="btn btn-block btn-primary" onclick="javascript:sendNotificationMessage('hi', 'hello');">Local Notification 발송테스트</button>
+		<button class="btn btn-block btn-primary" onclick="javascript:getPushPermissionState();">알림권한 여부체크</button>
+		<button class="btn btn-block btn-primary" onclick="javascript:requestPermission();">알림권한 허용요청</button>
 	</div>
 
 </div>

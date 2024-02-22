@@ -1,0 +1,158 @@
+<script th:fragment="push">
+    function isIOSDevice() {
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        return /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream && window.webkit && window.webkit.messageHandlers;
+    }
+
+    function getPushPermissionState() {
+        if(isIOSDevice()) {
+            window.webkit.messageHandlers['push-permission-state'].postMessage('push-permission-state');
+        } else {
+            alert(Notification.permission);
+        }
+    }
+
+    function sendNotificationMessage(title, message) {
+        if(isIOSDevice()) {
+            window.webkit.messageHandlers['pp'].postMessage({title, message});
+        } else {
+            navigator.serviceWorker.controller.postMessage({title, message});
+        }
+
+    }
+
+    function iOSPushPermissionRequest() {
+        if(isIOSDevice()) {
+            window.webkit.messageHandlers['push-permission-request'].postMessage('push-permission-request');
+        }
+    }
+
+    function requestPermission() {
+        if(isIOSDevice()) {
+            if(window.webkit.messageHandlers['push-permission-request']) {
+                window.iOSPushCapability = true;
+            }
+            iOSPushPermissionRequest();
+        } else {
+            if(!firebase) {
+                initFirebase();
+            }
+
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    alert('Notification permission granted');
+                } else {
+                    alert('Notification permission denied');
+                }
+            }).catch(reason => {
+                alert(reason);
+            });
+        }
+    }
+
+    $(document).ready(function() {
+
+        if(isIOSDevice()) {
+
+            //iOS native app 에서 획득한 fcm token 을 native app 에 요청
+            window.webkit.messageHandlers['get-fcm-token'].postMessage('get-fcm-token');
+
+            //iOS native app 에서 호출한 이벤트에 대한 리스너
+            $(window).on({
+                //
+                'push-permission-request': (message) => {
+                    if (message && message.detail){
+                        switch (message.detail) {
+                            case 'granted':
+                                alert('Notification permission granted');
+                                break;
+                            default:
+                                alert('Notification permission denied');
+                                break;
+                        }
+                    }
+                },
+                'push-notification': (message) => {
+                    /*
+                    if (message && message.detail) {
+                        console.log(message.detail);
+                        if (message.detail.aps && message.detail.aps.alert)
+                            alert(`${message.detail.aps.alert.title} ${message.detail.aps.alert.body}2`);
+                    }
+                    */
+                },
+                'push-permission-state': (message) => {
+                    if (message && message.detail){
+                        alert(message.detail);
+                        switch (message.detail) {
+                            case 'notDetermined':
+                                // permission not asked
+                                break;
+                            case 'denied':
+                                // permission denied
+                                break;
+                            case 'authorized':
+                            case 'ephemeral':
+                            case 'provisional':
+                                // permission granted
+                                break;
+                            case 'unknown':
+                            default:
+                                // something wrong
+                                break;
+                        }
+                    }
+                }
+
+            })
+
+            /*
+            //only javascript
+            window.addEventListener('push-permission-request', (message) => {
+                if (message && message.detail){
+                    switch (message.detail) {
+                        case 'granted':
+                            alert('Notification permission granted');
+                            break;
+                        default:
+                            alert('Notification permission denied');
+                            break;
+                    }
+                }
+            });
+
+            window.addEventListener('push-notification', (message) => {
+                if (message && message.detail) {
+                    console.log(message.detail);
+                    if (message.detail.aps && message.detail.aps.alert)
+                        alert(`${message.detail.aps.alert.title} ${message.detail.aps.alert.body}2`);
+                }
+            });
+
+            window.addEventListener('push-permission-state', (message) => {
+                if (message && message.detail){
+                    alert(message.detail);
+                    switch (message.detail) {
+                        case 'notDetermined':
+                            // permission not asked
+                            break;
+                        case 'denied':
+                            // permission denied
+                            break;
+                        case 'authorized':
+                        case 'ephemeral':
+                        case 'provisional':
+                            // permission granted
+                            break;
+                        case 'unknown':
+                        default:
+                            // something wrong
+                            break;
+                    }
+                }
+            });
+             */
+        }
+
+    })
+</script>

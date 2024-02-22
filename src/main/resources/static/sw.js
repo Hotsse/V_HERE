@@ -53,14 +53,14 @@ const updateName = async (event) => {
     await self.widgets.updateByInstanceId(event.instanceId, payload);
 }
 
-// 메시지 리스너 추가
+// pc, android local notification 수신
 self.addEventListener('message', event => {
     const payload = event.data;
     showNotification(payload.title, payload.message);
 });
 
+// local notification 발송
 const showNotification = (title, message) => {
-    // 알림 열기
     self.registration.showNotification(title, {
         body: message,
         icon: null
