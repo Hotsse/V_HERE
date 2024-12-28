@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.6.6</version>
+		<version>2.7.18</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.hotsse</groupId>
@@ -15,7 +15,7 @@
 	<description>사진 명소 추천 어플리케이션</description>
 
 	<properties>
-		<java.version>17</java.version>
+		<java.version>21</java.version>
 	</properties>
 
 	<dependencies>
@@ -62,6 +62,7 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
+			<version>1.4.200</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
