@@ -3,8 +3,8 @@
 (PWA 기반 웹앱 지원)
 
 ## Spec
-- Spring Boot 2.6.6
-- Java 17
+- Spring Boot 2.7.18
+- Java 21
 - Maven Build
 - Thymeleaf
 - Spring Security
