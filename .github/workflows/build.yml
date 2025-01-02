@@ -1,0 +1,53 @@
+name: V-HERE 프로젝트 빌드
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Repository Checkout
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # 2. Set Up JDK 21
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: 21
+          distribution: temurin
+
+      # 3. Cache Maven Dependencies
+      - name: Cache Maven Dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      # 4. Build Maven Project
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      # 5. Build API Docker Image
+      - name: Build API Docker Image
+        run: |
+          docker build \
+            -f docker/Dockerfile \
+            --build-arg SPRING_PROFILES_ACTIVE=dev \
+            -t ghcr.io/hotsse/v-here:latest .
+
+      # 6. Push Docker Image to Docker Hub
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Push API Docker Image
+        run: docker push ghcr.io/hotsse/v-here:latest

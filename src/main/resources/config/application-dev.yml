@@ -34,4 +34,4 @@ logging.level:
     org.hibernate.type: trace
     
 file:
-  path: C:/storages/vhere
+  path: ./storages
