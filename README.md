@@ -21,7 +21,7 @@
 - https://github.com/users/Hotsse/packages/container/package/v-here
 ``` bash
 docker pull ghcr.io/hotsse/v-here:latest
-docker run -p 8080:8080 ghcr.io/hotsse/v-here:latest
+docker run --platform=linux/amd64 -p 8080:8080 ghcr.io/hotsse/v-here:latest
 ```
 
 ## 서비스 미리보기
